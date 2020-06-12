@@ -12,7 +12,8 @@ class Block {
 		this.id = 0;
         this.nonce = 144444;
       	this.body = data;
-      	this.hash = "";
+          this.hash = "";
+       
     }
     
     /**
@@ -27,9 +28,23 @@ class Block {
       	// Use this to create a temporary reference of the class object
       	let self = this;
         //Implement your code here
-        return SHA256(self.body)
+        let combineValue = self.nonce + self.body
+       
+        // console.log(SHA256(JSON.stringify(combineValue)))
+        // let hashedInitialData = SHA256(JSON.stringify(self.body).toString())
+        // console.log(hashedInitialData)
+        // let newCombinedValue = (self.nonce).toString() + (hashedInitialData).toString()
+      let rehashedValue = SHA256(JSON.stringify(combineValue))
+        self.hash = rehashedValue;  
         
-    }
+      return (new Promise(function(resolve, reject) {
+                if (self.hash) {
+                    resolve(self)
+                } else {
+                    reject(Error("No hash to return"))
+                }
+            }))
+        }
 }
 
 // Exporting the class Block to be reuse in other files
